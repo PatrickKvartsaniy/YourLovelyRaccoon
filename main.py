@@ -1,6 +1,8 @@
+import os
+import json
+
 import asyncio
 import aiohttp
-import json
 
 from aiohttp import web
 
@@ -16,7 +18,8 @@ if __name__ == "__main__":
         app.router.add_route('POST', '/api/v1/echo', raccoon_bot.handler)
 
         app.middlewares.append(middleware_factory)
-        web.run_app(app,host='0.0.0.0',port=23456)
+        host, port = '0.0.0.0', int(os.environ.get('PORT', 5000))
+        web.run_app(app,host=host,port=port)
     except Exception as e:
         print(f"Error run server {e}")
     finally:
