@@ -8,5 +8,8 @@ class Raccoon(Conversation):
         super().__init__(token, loop)
 
     async def _handler (self, message):
-        await self.sendMessage(message['chat']['id'],
-                               message['text'])
+        if "/events" in message['text']:
+            data = await self.getData("FutureEvents")
+            message_text = f"""Зараз в нас плануються такі івенти: /n
+                              {data[0]['title']}, посилання - {data[0]['link']}"""
+            await self.sendMessage(message['chat']['id'],)

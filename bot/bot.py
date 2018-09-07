@@ -27,6 +27,16 @@ class Bot(object):
                     pass
         return web.Response(status=200)
 
+    async def getData(self, api):
+        async def func():
+            async with aiohttp.ClientSession() as session:
+                async with session.get(f"https://aegee-website.herokuapp.com/api{api}/") as resp:
+                    if resp.status == 200:
+                        data = await resp.json()
+                        return data
+                    else:
+                        print("Somthing went wrong, {resp.status}")
+
     async def sendMessage(self, chatId, text):
         message = {
             'chat_id': chatId,
