@@ -3,6 +3,8 @@ import json
 import asyncio
 import aiohttp
 
+from aiohttp import web
+
 class Bot(object):
     URL = "https://api.telegram.org/bot{}/{}"
 
