@@ -30,7 +30,7 @@ class Bot(object):
 
     async def getData(self, api):
         async with aiohttp.ClientSession() as session:
-            async with session.get(TELEGRAM_URL.format(api)) as resp:
+            async with session.get(self.HEROKU_URL.format(api)) as resp:
                 if resp.status == 200:
                     data = await resp.json()
                     return data
