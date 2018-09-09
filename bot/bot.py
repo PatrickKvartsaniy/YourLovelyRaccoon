@@ -1,69 +1,39 @@
 import json
-
-import asyncio
 import aiohttp
 
-from aiohttp import web
+from .bot import Conversation
 
-class Bot(object):
-    TELEGRAM_URL = "https://api.telegram.org/bot{}/{}"
-    HEROKU_URL = "https://aegee-website.herokuapp.com/api{}"
+class Raccoon(Conversation):
+    MESSAGE_TEMPLATE = "{} {}. \n Деталі на нашій сторінці - {}"
 
-    def __init__(self, token, db, loop):
-        self._token = token
-        self._db = db
-        self._loop = loop
-
-    async def _request(self, method, message):
-        headers = {
-            "Content-type": "application/json"
-        }
-        async with aiohttp.ClientSession(loop=self._loop) as session:
-            async with session.post(self.TELEGRAM_URL.format(self._token, method),
-                                    data=json.dumps(message),
-                                    headers=headers) as resp:
-                try:
-                    assert resp.status == 200
-                except:
-                    # return web.Response(status=500
-                    pass
-        return web.Response(status=200)
-
-    async def getData(self, api):
-        async with aiohttp.ClientSession() as session:
-            async with session.get(self.HEROKU_URL.format(api)) as resp:
-                if resp.status == 200:
-                    data = await resp.json()
-                    return data
-                else:
-                    print("Somthing went wrong, {resp.status}")
-
-    async def sendMessage(self, chatId, text):
-        message = {
-            'chat_id': chatId,
-            'text': text
-        }
-        await self._request('sendMessage', message)
-
-    async def save_sub(self, id, first_name, username):
-        subscriber = {"telegram_id": id,
-                      "first_name": first_name,
-                      "username": username}
-        check = await self._db['subscribers'].find_one({"telegram_id":subscriber['id']})
-        if check == None:
-            await self._db['subscribers'].insert_one(subscriber)
-            return "Done"
-        return "Exist"
-
-
-class Conversation(Bot):
     def __init__(self, token, db, loop):
         super().__init__(token, db, loop)
 
-    async def _handler(self, message):
-        pass
-
-    async def handler(self, request):
-        message = await request.json()
-        asyncio.ensure_future(self._handler(message["message"]))
-        return aiohttp.web.Response(status=200)
+    async def _handler (self, message):
+        if message['text'] == "/events":
+            events = await self.getData("FutureEvents")
+            message_head = "Зараз в нас плануються такі івенти:"
+            await self.sendMessage(message['chat']['id'], message_head)
+            for event in events:
+                await self.sendMessage(message['chat']['id'],
+                                       self.MESSAGE_TEMPLATE.format(event['title'],
+                                                                    event['date'],
+                                                                    event['link']))
+        elif message['text'] == "/news":
+            news = await self.getData("LastPosts")
+            message_head = "Останні новини:"
+            await self.sendMessage(message['chat']['id'], message_head)
+            for post in news:
+                await self.sendMessage(message['chat']['id'],
+                                       self.MESSAGE_TEMPLATE.format(post['title'],
+                                                                    post['date'],
+                                                                    post['link']))
+        elif message['text'] == "/subscribe":
+            sub = message['from']
+            result = await self.save_sub(sub['id'], sub['first_name'], sub['username'])
+            if result == "Exist":
+                await self.sendMessage(message['chat']['id'], f"Тю {message['from']['first_name']}, ти вже з нами, ну всмислє падпісан")
+            elif result == "Done":
+                await self.sendMessage(message['chat']['id'], f"{message['from']['first_name']}, вітаю в падпісотє")
+        else:
+            self.sendMessage(message['chat']['id'], "Чєво?")
