@@ -49,9 +49,9 @@ class Bot(object):
         subscriber = {"telegram_id": id,
                       "first_name": first_name,
                       "username": username}
-        check = await db['subscribers'].find_one({"telegram_id":subscriber['id']})
+        check = await self.db['subscribers'].find_one({"telegram_id":subscriber['id']})
         if check == None:
-            await db['subscribers'].insert_one(subscriber)
+            await self.db['subscribers'].insert_one(subscriber)
             return "Done"
         return "Exist"
 
