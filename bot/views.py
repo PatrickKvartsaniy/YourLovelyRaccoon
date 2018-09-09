@@ -18,7 +18,7 @@ class Raccoon(Conversation):
                 await self.sendMessage(message['chat']['id'],
                                        self.MESSAGE_TEMPLATE.format(event['title'],
                                                                     event['date'],
-                                                                    event['link'])
+                                                                    event['link']))
         elif "news" in message['text']:
             news = await self.getData("LastPosts")
             message_head = "Останні новини:"
@@ -27,4 +27,4 @@ class Raccoon(Conversation):
                 await self.sendMessage(message['chat']['id'],
                                        self.MESSAGE_TEMPLATE.format(post['title'],
                                                                     post['date'],
-                                                                    post['link'])
+                                                                    post['link']))
