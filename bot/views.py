@@ -12,5 +12,5 @@ class Raccoon(Conversation):
             events = await self.getData("FutureEvents")
             message_head = "Зараз в нас плануються такі івенти:"
             await self.sendMessage(message['chat']['id'], message_head)
-            for event in data:
+            for event in events:
                 await self.sendMessage(message['chat']['id'], f"{data[0]['title']}, посилання - {data[0]['link']}")
