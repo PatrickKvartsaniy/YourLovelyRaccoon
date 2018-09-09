@@ -28,3 +28,5 @@ class Raccoon(Conversation):
                                        self.MESSAGE_TEMPLATE.format(post['title'],
                                                                     post['date'],
                                                                     post['link']))
+        else:
+            print(message)
