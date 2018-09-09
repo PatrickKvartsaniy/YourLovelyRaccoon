@@ -30,7 +30,8 @@ class Raccoon(Conversation):
                                                                     post['link']))
         elif message['text'] == "/subscribe":
             try:
-                result = await self.save_sub(message['from'])
+                sub = message['from']
+                result = await self.save_sub(sub['id'], sub['first_name'], sub['username'])
                 if result == "Exist":
                     await self.sendMessage(message['chat']['id'], f"Тю {message['from']['first_name']}, ти ж вже з нами")
                 elif result == "Done":
