@@ -4,13 +4,13 @@ import aiohttp
 from .bot import Conversation
 
 class Raccoon(Conversation):
-    MESSAGE_TEMPLATE = "{} {}. Деталі на нашій сторінці - {}"
+    MESSAGE_TEMPLATE = "{} {}. \n Деталі на нашій сторінці - {}"
 
-    def __init__(self, token, loop):
-        super().__init__(token, loop)
+    def __init__(self, token, db, loop):
+        super().__init__(token, db, loop)
 
     async def _handler (self, message):
-        if "events" in message['text']:
+        if message['text'] == "/events":
             events = await self.getData("FutureEvents")
             message_head = "Зараз в нас плануються такі івенти:"
             await self.sendMessage(message['chat']['id'], message_head)
@@ -19,7 +19,7 @@ class Raccoon(Conversation):
                                        self.MESSAGE_TEMPLATE.format(event['title'],
                                                                     event['date'],
                                                                     event['link']))
-        elif "news" in message['text']:
+        elif message['text'] == "/news":
             news = await self.getData("LastPosts")
             message_head = "Останні новини:"
             await self.sendMessage(message['chat']['id'], message_head)
@@ -28,8 +28,12 @@ class Raccoon(Conversation):
                                        self.MESSAGE_TEMPLATE.format(post['title'],
                                                                     post['date'],
                                                                     post['link']))
-        else:
-            print(message['from']['id'])
-            print(message['from']['first_name'])
-            print(message['from']['last_name'])
-            print(message['from']['username'])
+        elif message['text'] == "/subscribe":
+            try:
+                result = await self.save_sub(message['from'])
+                if result == "Exist":
+                    await self.sendMessage(message['chat']['id'], f"Тю {message['from']['first_name']}, ти ж вже з нами")
+                elif result == "Done":
+                    await self.sendMessage(message['chat']['id'], f"{message['from']['first_name']}, вітаю в падпісотє")
+            except Exception as e:
+                print(e)

@@ -6,7 +6,7 @@ import aiohttp
 
 from aiohttp import web
 
-from setup import init_app
+from setup import init_app, init_mongo
 from bot import Raccoon
 from middleware import middleware_factory
 
@@ -14,7 +14,8 @@ if __name__ == "__main__":
     loop = asyncio.get_event_loop()
     try:
         app = loop.run_until_complete(init_app(loop))
-        raccoon_bot = Raccoon(app['config']['telegram']['token'], loop)
+        db = loop.run_until_complete(init_mongo(app['config']['mongo']))
+        raccoon_bot = Raccoon(app['config']['telegram']['token'], db, loop)
         app.router.add_route('POST', '/api/v1/echo', raccoon_bot.handler)
 
         app.middlewares.append(middleware_factory)

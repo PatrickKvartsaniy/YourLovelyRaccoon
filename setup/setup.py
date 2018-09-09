@@ -2,7 +2,7 @@ import os
 import json
 
 from aiohttp import web
-
+import motor.motor_asyncio
 # BASE_DIR = os.path.dirname(__file__)
 
 def install_config(app):
@@ -14,3 +14,9 @@ async def init_app(loop):
     app = web.Application()
     install_config(app)
     return app
+
+async def init_mongo(config):
+    client = motor.motor_asyncio.AsyncIOMotorClient(config['host'],
+                                                    config['port'])
+    db = client['raccoon']
+    return db

@@ -9,8 +9,9 @@ class Bot(object):
     TELEGRAM_URL = "https://api.telegram.org/bot{}/{}"
     HEROKU_URL = "https://aegee-website.herokuapp.com/api{}"
 
-    def __init__(self, token, loop):
+    def __init__(self, token, db, loop):
         self._token = token
+        self._db = db
         self._loop = loop
 
     async def _request(self, method, message):
@@ -44,9 +45,20 @@ class Bot(object):
         }
         await self._request('sendMessage', message)
 
+    async def save_sub(sub):
+        subscriber = {"telegram_id": sub['id'],
+               "first_name": sub['first_name'],
+               "username": sub['username']}
+        check = await db['subscribers'].find_one({"telegram_id":subscriber['id']})
+        if check == None:
+            await db['subscribers'].insert_one(subscriber)
+            return "Done"
+        return "Exist"
+
+
 class Conversation(Bot):
-    def __init__(self, token, loop):
-        super().__init__(token, loop)
+    def __init__(self, token, db, loop):
+        super().__init__(token, db, loop)
 
     async def _handler(self, message):
         pass
