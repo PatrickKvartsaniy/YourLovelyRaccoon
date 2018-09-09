@@ -6,7 +6,8 @@ import aiohttp
 from aiohttp import web
 
 class Bot(object):
-    URL = "https://api.telegram.org/bot{}/{}"
+    TELEGRAM_URL = "https://api.telegram.org/bot{}/{}"
+    HEROKU_URL = "https://aegee-website.herokuapp.com/api{}"
 
     def __init__(self, token, loop):
         self._token = token
@@ -17,7 +18,7 @@ class Bot(object):
             "Content-type": "application/json"
         }
         async with aiohttp.ClientSession(loop=self._loop) as session:
-            async with session.post(self.URL.format(self._token, method),
+            async with session.post(self.TELEGRAM_URL.format(self._token, method),
                                     data=json.dumps(message),
                                     headers=headers) as resp:
                 try:
@@ -28,14 +29,13 @@ class Bot(object):
         return web.Response(status=200)
 
     async def getData(self, api):
-        async def func():
-            async with aiohttp.ClientSession() as session:
-                async with session.get(f"https://aegee-website.herokuapp.com/api{api}/") as resp:
-                    if resp.status == 200:
-                        data = await resp.json()
-                        return data
-                    else:
-                        print("Somthing went wrong, {resp.status}")
+        async with aiohttp.ClientSession() as session:
+            async with session.get(TELEGRAM_URL.format(api)) as resp:
+                if resp.status == 200:
+                    data = await resp.json()
+                    return data
+                else:
+                    print("Somthing went wrong, {resp.status}")
 
     async def sendMessage(self, chatId, text):
         message = {
