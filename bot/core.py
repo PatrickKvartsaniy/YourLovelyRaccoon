@@ -59,7 +59,7 @@ class Bot(object):
         check = await self._db['subscribers'].find_one({"telegram_id":id})
         if check == None:
             return "Not Exist"
-        await._db['subscribers'].delete_one({"telegram_id":id})
+        await self_db['subscribers'].delete_one({"telegram_id":id})
         return "Done"
 
 
