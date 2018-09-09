@@ -1,7 +1,7 @@
 import json
 import aiohttp
 
-from .bot import Conversation
+from .core import Conversation
 
 class Raccoon(Conversation):
     MESSAGE_TEMPLATE = "{} {}. \n Деталі на нашій сторінці - {}"
