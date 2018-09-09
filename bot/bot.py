@@ -32,8 +32,17 @@ class Raccoon(Conversation):
             sub = message['from']
             result = await self.save_sub(sub['id'], sub['first_name'], sub['username'])
             if result == "Exist":
-                await self.sendMessage(message['chat']['id'], f"Тю {message['from']['first_name']}, ти вже з нами, ну всмислє падпісан")
+                await self.sendMessage(message['chat']['id'], f"Тю {sub['first_name']}, ти вже з нами, ну всмислє падпісан")
             elif result == "Done":
-                await self.sendMessage(message['chat']['id'], f"{message['from']['first_name']}, вітаю в падпісотє")
+                await self.sendMessage(message['chat']['id'], f"{sub['first_name']}, вітаю в падпісотє")
+
+        elif message['text'] == "/unsubscribe":
+            sub = message['from']
+            result = await self.delete_sub(sub['id'])
+            if result == "Not Exist":
+                await self.sendMessage(message['chat']['id'], f"{sub['first_name']} ти і так не підписаний, чого голову морочиш")
+            elif result == "Done":
+                await self.sendMessage(message['chat']['id'], f"Ну шо {sub['first_name']}, ти відписався. Якщо передумаєш - /subscribe")
+
         else:
-            self.sendMessage(message['chat']['id'], "Чєво?")
+            self.sendMessage(message['chat']['id'], " Ти взагалі про що? Введи '/' і подивися список команд.")

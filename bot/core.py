@@ -55,6 +55,13 @@ class Bot(object):
             return "Done"
         return "Exist"
 
+    async def delete_sub(self, id, first_name):
+        check = await self._db['subscribers'].find_one({"telegram_id":id})
+        if check == None:
+            return "Not Exist"
+        await._db['subscribers'].delete_one({"telegram_id":id})
+        return "Done"
+
 
 class Conversation(Bot):
     def __init__(self, token, db, loop):
