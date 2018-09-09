@@ -55,7 +55,7 @@ class Bot(object):
             return "Done"
         return "Exist"
 
-    async def delete_sub(self, id, first_name):
+    async def delete_sub(self, id):
         check = await self._db['subscribers'].find_one({"telegram_id":id})
         if check == None:
             return "Not Exist"
