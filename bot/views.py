@@ -10,7 +10,7 @@ class Raccoon(Conversation):
         super().__init__(token, loop)
 
     async def _handler (self, message):
-        if "event" in message['text']:
+        if "events" in message['text']:
             events = await self.getData("FutureEvents")
             message_head = "Зараз в нас плануються такі івенти:"
             await self.sendMessage(message['chat']['id'], message_head)
@@ -29,4 +29,7 @@ class Raccoon(Conversation):
                                                                     post['date'],
                                                                     post['link']))
         else:
-            print(message)
+            print(message['from']['id'])
+            print(message['from']['first_name'])
+            print(message['from']['last_name'])
+            print(message['from']['username'])
