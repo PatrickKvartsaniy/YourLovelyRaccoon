@@ -15,14 +15,16 @@ if __name__ == "__main__":
     try:
         app = loop.run_until_complete(init_app(loop))
         db = loop.run_until_complete(init_mongo(app['config']['mongo']))
+
         raccoon_bot = Raccoon(app['config']['telegram']['token'], db, loop)
+
         app.router.add_route('POST', '/api/v1/echo', raccoon_bot.handler)
 
         app.middlewares.append(middleware_factory)
         host, port = '0.0.0.0', int(os.environ.get('PORT', 5000))
         web.run_app(app,host=host,port=port)
-    except Exception as e:
-        print(f"Error run server {e}")
+    # except Exception as e:
+    #     print(f"Error run server {e}")
     finally:
         loop.close()
         print("\nServer shut down")

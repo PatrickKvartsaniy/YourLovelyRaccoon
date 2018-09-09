@@ -45,7 +45,7 @@ class Bot(object):
         }
         await self._request('sendMessage', message)
 
-    async def save_sub(self, sub, id, first_name, username):
+    async def save_sub(self, id, first_name, username):
         subscriber = {"telegram_id": id,
                       "first_name": first_name,
                       "username": username}

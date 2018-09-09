@@ -3,7 +3,10 @@
         "token": "642399830:AAHfVtOjXl5TId9jlvTHqZmZhuSzz9TofKQ"
     },
     "mongo":{
-      "host":"127.0.0.1",
-      "port": 27017
+      "host":"ds151012.mlab.com",
+      "port": 51012,
+      "user": "patrick12",
+      "password": "erasmusmundus12",
+      "db": "aegee"
     }
 }

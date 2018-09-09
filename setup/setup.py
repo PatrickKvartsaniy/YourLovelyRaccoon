@@ -16,7 +16,6 @@ async def init_app(loop):
     return app
 
 async def init_mongo(config):
-    client = motor.motor_asyncio.AsyncIOMotorClient(config['host'],
-                                                    config['port'])
-    db = client['raccoon']
+    client = motor.motor_asyncio.AsyncIOMotorClient(f"mongodb://{config['user']}:{config['password']}@{config['host']}:{config['port']}/{config['db']}")
+    db = client['aegee']
     return db
