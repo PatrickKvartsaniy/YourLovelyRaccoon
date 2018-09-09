@@ -10,7 +10,7 @@ class Raccoon(Conversation):
     async def _handler (self, message):
         if "events" in message['text']:
             events = await self.getData("FutureEvents")
-            message_head = f"Зараз в нас плануються такі івенти:
+            message_head = "Зараз в нас плануються такі івенти:"
             await self.sendMessage(message['chat']['id'], message_head)
             for event in data:
                 await self.sendMessage(message['chat']['id'], f"{data[0]['title']}, посилання - {data[0]['link']}")
