@@ -45,7 +45,7 @@ class Bot(object):
         }
         await self._request('sendMessage', message)
 
-    async def save_sub(self, id, first_name, username):
+    async def saveSub(self, id, first_name, username):
         subscriber = {"telegram_id": id,
                       "first_name": first_name,
                       "username": username}
@@ -55,7 +55,7 @@ class Bot(object):
             return "Done"
         return "Exist"
 
-    async def delete_sub(self, id):
+    async def deleteSub(self, id):
         check = await self._db['subscribers'].find_one({"telegram_id":id})
         if check == None:
             return "Not Exist"
@@ -73,4 +73,9 @@ class Conversation(Bot):
     async def handler(self, request):
         message = await request.json()
         asyncio.ensure_future(self._handler(message["message"]))
+        return aiohttp.web.Response(status=200)
+
+    async def dispatcher(self, request):
+        message = await request.json()
+        print(message)
         return aiohttp.web.Response(status=200)

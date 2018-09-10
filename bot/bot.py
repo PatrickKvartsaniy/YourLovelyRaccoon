@@ -30,7 +30,7 @@ class Raccoon(Conversation):
                                                                     post['link']))
         elif message['text'] == "/subscribe":
             sub = message['from']
-            result = await self.save_sub(sub['id'], sub['first_name'], sub['username'])
+            result = await self.saveSub(sub['id'], sub['first_name'], sub['username'])
             if result == "Exist":
                 await self.sendMessage(message['chat']['id'], f"Тю {sub['first_name']}, ти вже з нами, ну всмислє падпісан")
             elif result == "Done":
@@ -38,7 +38,7 @@ class Raccoon(Conversation):
 
         elif message['text'] == "/unsubscribe":
             sub = message['from']
-            result = await self.delete_sub(sub['id'])
+            result = await self.deleteSub(sub['id'])
             if result == "Not Exist":
                 await self.sendMessage(message['chat']['id'], f"{sub['first_name']} ти і так не підписаний, чого голову морочиш")
             elif result == "Done":

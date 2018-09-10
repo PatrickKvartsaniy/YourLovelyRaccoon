@@ -18,7 +18,8 @@ if __name__ == "__main__":
 
         raccoon_bot = Raccoon(app['config']['telegram']['token'], db, loop)
 
-        app.router.add_route('POST', '/api/v1/echo', raccoon_bot.handler)
+        app.router.add_routes([web.post('/api/v1/echo', raccoon_bot.handler),
+                               web.post('/dispatcher', raccoon_bot.dispatcher)])
 
         app.middlewares.append(middleware_factory)
         host, port = '0.0.0.0', int(os.environ.get('PORT', 5000))
